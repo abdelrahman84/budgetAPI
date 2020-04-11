@@ -11,6 +11,11 @@ const { check, validationResult } = require('express-validator');
 
 const { matchedData, sanitize } = require('express-validator');
 
+let jwt = require('jsonwebtoken');
+
+let config = require('../jwt/config');
+let middleware = require('../jwt/middleware');
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
@@ -26,6 +31,7 @@ router.post('/register', [
         // if user email isn't unique throw error
       })
     }),
+  check('username', 'username can`t be left blank').isLength({ min: 1 }),
   check('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long')
     .matches(/\d/).withMessage('Password must contain one number'),
 ], function (req, res, next) {
@@ -45,16 +51,21 @@ router.post('/register', [
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       email: req.body.email,
+      username: req.body.username,
       password: encPassword
     };
-
+    let token = jwt.sign({username: req.body.username},
+      config.secret,
+      {
+        expiresIn: '24h'
+      }) 
     var user = new User(data);
     user.save(function (error) {
       console.log(user);
       if (error) {
         throw error;
-      }
-      res.json({ message: 'User saved successfully', user });
+      }   
+      res.json({ message: 'User saved successfully', user, token: token });
     });
   }
 });

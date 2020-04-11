@@ -15,6 +15,10 @@ var userSchema = new Schema({
         validate: [validateEmail, 'Please enter a valid email address'], match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email address'],
         index: { unique: true }
     },
+    username: {
+        type: String, required: 'username required',
+        index: { unique: true }
+    },
     password: { type: String, required: [true, 'Password cannot be left blank'] },
 });
 
