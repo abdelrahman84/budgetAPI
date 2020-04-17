@@ -10,11 +10,13 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/budget', {useNewUrlParser: true, useUnifiedTopology: true });
 require('./models/user');
+var cors = require('cors');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+app.use(cors({origin: 'http://localhost:3001'}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,6 +43,10 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
+  
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
 
   // render the error page
   res.status(err.status || 500);

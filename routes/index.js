@@ -65,7 +65,7 @@ router.post('/register', [
       if (error) {
         throw error;
       }   
-      res.json({ message: 'User saved successfully', user, token: token });
+      res.json({ status: 'success', user, token: token });
     });
   }
 });
