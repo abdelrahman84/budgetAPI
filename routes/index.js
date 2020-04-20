@@ -26,26 +26,26 @@ router.post('/login', [
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400).json({ message: errors.array() });
+    res.json({ status: 'error', message: errors.array() });
   } else {
     const email = req.body.email;
     const password = req.body.password;
     User.findOne({ email: email }).then(
       user => {
         if (!user) {
-          return res.status(400).json({ error: 'user doesn`t exist' })
+          return res.json({ status: 'error', message: 'user doesn`t exist' })
         }
         bcrypt.compare(password, user.password)
           .then((isMatch) => {
             if (!isMatch) {
-              return res.status(400).json({ error: 'incorrect password, please check and try again' })
+              return res.json({ status: 'error', message: 'incorrect password, please check and try again' })
             } if (isMatch) {
               let token = jwt.sign({ username: user.username },
                 config.secret,
                 {
                   expiresIn: '24h'
                 })
-              res.json({ status: 'login success', user, token: token });
+              res.json({ status: 'success', user, token: token });
             }
           })
       }
