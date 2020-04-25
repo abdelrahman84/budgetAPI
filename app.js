@@ -10,10 +10,12 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/budget', {useNewUrlParser: true, useUnifiedTopology: true });
 require('./models/user');
+require('./models/budget');
 var cors = require('cors');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var budget = require('./routes/budget');
 
 var app = express();
 app.use(cors({origin: 'http://localhost:3001'}));
@@ -29,9 +31,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+let middleware = require('./jwt/middleware');
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/api', middleware.checkToken, budget);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
 let bcrypt = require('bcrypt');
 
-var User = mongoose.model('Users');
+var User = mongoose.model('User');
 
 const { check, validationResult } = require('express-validator');
 

@@ -3,11 +3,12 @@ const config = require('./config');
 
 let checkToken = (req, res, next) => {
     let token = req.headers['x-access-token'] || req.headers['authorization'];
-    if (token.startsWith('Bearer ')) {
-        token = token.slice(7, token.length);
-    }
+   
 
     if (token) {
+        if (token.startsWith('Bearer ')) {
+            token = token.slice(7, token.length);
+        }
         jwt.verify(token, config.secret, (err, decoded) => {
             if (err) {
                 return res.json({

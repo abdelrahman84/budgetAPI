@@ -20,6 +20,8 @@ var userSchema = new Schema({
         index: { unique: true }
     },
     password: { type: String, required: [true, 'Password cannot be left blank'] },
+}, {
+    timestamps: true
 });
 
-module.exports = mongoose.model('Users', userSchema);
+module.exports = mongoose.model('User', userSchema);
