@@ -57,8 +57,7 @@ router.post('/login', [
 router.post('/register', [
   check('first_name', 'First name can`t be left blank').isLength({ min: 1 }),
   check('last_name', 'Last name can`t be left blank').isLength({ min: 1 }),
-  check('email').isEmail().withMessage('Please enter a valid email address').trim()
-    .normalizeEmail().custom(value => {
+  check('email').isEmail().withMessage('Please enter a valid email address').trim().custom(value => {
       return findUserByEmail(value).then(User => {
         // if user email isn't unique throw error
       })
