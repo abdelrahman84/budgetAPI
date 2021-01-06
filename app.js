@@ -6,16 +6,64 @@ var bodyParser = require('body-parser');
 
 var logger = require('morgan');
 
-var mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/budget', {useNewUrlParser: true, useUnifiedTopology: true });
-require('./models/user');
-require('./models/budget');
+// var mongoose = require('mongoose');
+
+// require('./models/user');
+// require('./models/budget');
+// require('./models/category');
+
+// mongoose.Promise = global.Promise;
+// mongoose.connect('mongodb://localhost/budget', {useNewUrlParser: true, useUnifiedTopology: true });
+
+const eraseDatabaseOnSync = true;
+
+import models, {connectDb} from './models';
+connectDb().then(async() => {
+  if (eraseDatabaseOnSync) {
+    await Promise.all([
+      models.Category.deleteMany({}),
+    ]);
+
+    createCategories();
+}
+});
+
+
+const createCategories = async () => {
+  const category1 = new models.Category({
+    title: 'health',
+  });
+  const category2 = new models.Category({
+    title: 'grocery',
+  });
+  const category3 = new models.Category({
+    title: 'eat out',
+  });
+  const category4 = new models.Category({
+    title: 'car',
+  });
+  const category5 = new models.Category({
+    title: 'education',
+  });
+  const category6 = new models.Category({
+    title: 'general',
+  });
+  await category1.save();
+  await category2.save();
+  await category3.save();
+  await category4.save();
+  await category5.save();
+}
+
+
+
+
 var cors = require('cors');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 var budget = require('./routes/budget');
+var category = require ('./routes/category')
 
 var app = express();
 app.use(cors({origin: 'http://localhost:3001'}));
@@ -36,6 +84,7 @@ let middleware = require('./jwt/middleware');
 app.use('/', index);
 app.use('/users', users);
 app.use('/api', middleware.checkToken, budget);
+app.use('/category', middleware.checkToken, category);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

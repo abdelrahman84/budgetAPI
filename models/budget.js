@@ -1,9 +1,6 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-var Schema = mongoose.Schema;
-
-
-var budgetSchema = new Schema({
+const budgetSchema = new mongoose.Schema({
     title: { type: String, required: [true, 'title required!'] },
     cycle: { type: Number, required: [true, 'budget cycle date is required!'] },
     balance: { type: Number },
@@ -13,4 +10,6 @@ var budgetSchema = new Schema({
 }
 );
 
-module.exports = mongoose.model('Budget', budgetSchema);
+const Budget = mongoose.model('Budget', budgetSchema);
+
+export default Budget;
