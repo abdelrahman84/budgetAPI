@@ -37,4 +37,13 @@ router.post('/category', [
     }
 });
 
+router.get('/categories', async function (req, res) {
+    try {
+        const categories = await Category.find();
+        res.json(categories)
+    } catch (err) {
+        return err
+    }
+})
+
 module.exports = router;
